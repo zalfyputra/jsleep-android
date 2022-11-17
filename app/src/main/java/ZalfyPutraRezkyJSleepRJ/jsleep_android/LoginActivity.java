@@ -12,7 +12,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        TextView register = findViewById(R.id.textView4);
+        TextView register = findViewById(R.id.registerNow);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

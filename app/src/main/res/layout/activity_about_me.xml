@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#141414"
-    tools:context=".RegisterActivity">
+    tools:context=".AboutMeActivity" >
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/box1"
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="70dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="150dp"
@@ -23,14 +23,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/jsleep"
+        android:id="@+id/AboutMe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="150dp"
         android:layout_marginLeft="16dp"
         android:layout_marginEnd="16dp"
-        android:text="JSLEEP"
+        android:text="ABOUT ME"
         android:textColor="#141414"
         android:textSize="50sp"
         android:textStyle="bold"
@@ -38,77 +38,83 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <TextView
         android:id="@+id/name"
-        android:backgroundTint="#fff"
-        android:ems="10"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="260dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
+        android:text="Nama: Zalfy"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintHorizontal_bias="0.148"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="312dp"
+        android:layout_marginRight="16dp"
+        android:text="Email: zalfy@ui.ac.id"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintHorizontal_bias="0.206"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="364dp"
+        android:layout_marginRight="16dp"
+        android:text="Balance: 0.0"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintHorizontal_bias="0.148"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
+        android:id="@+id/nominal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/email"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="452dp"
+        android:layout_marginRight="16dp"
         android:backgroundTint="#fff"
         android:ems="10"
-        android:hint="Email"
+        android:hint="Enter value"
         android:inputType="textEmailAddress"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
-        android:layout_marginTop="340dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="420dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#fff"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="500dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="516dp"
         android:backgroundTint="#A5E2F8"
-        android:text="REGISTER"
+        android:text="TOPUP"
         android:textColor="#141414"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.472"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

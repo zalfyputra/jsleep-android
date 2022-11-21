@@ -17,7 +17,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     BaseApiService mApiService;
-    EditText username, password;
+    EditText email, password;
     Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mApiService = UtilsApi.getAPIService();
         mContext = this;
-        username = findViewById(R.id.usernameBox);
+        email = findViewById(R.id.emailBox);
         password = findViewById(R.id.passwordBox);
         Button loginButton = findViewById(R.id.loginButton);
         Button registerButton = findViewById(R.id.registerButton);

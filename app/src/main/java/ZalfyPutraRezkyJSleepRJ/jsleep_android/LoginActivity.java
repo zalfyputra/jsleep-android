@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Account account = requestAccount();
+                Account login = requestLogin();
             }
         });
 
@@ -63,9 +63,34 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<Account> call, Throwable t) {
                 System.out.println("Login Failed");
                 System.out.println(t.toString());
-                Toast.makeText(mContext,"no Account id=0", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,"No Account id = 0", Toast.LENGTH_SHORT).show();
             }
         });
         return null;
     }
+
+    protected Account requestLogin() {
+        email = findViewById(R.id.emailBox);
+        password = findViewById(R.id.passwordBox);
+        mApiService.login(email.getText().toString(), password.getText().toString()).enqueue(new Callback<Account>() {
+            @Override
+            public void onResponse(Call<Account> call, Response<Account> response) {
+                if (response.isSuccessful()) {
+                    Account login;
+                    login = response.body();
+                    System.out.println(login.toString());
+                    Intent move = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(move);
+                    Toast.makeText(mContext,"Login Successful", Toast.LENGTH_SHORT).show();
+                    MainActivity.accountLogin = login;
+                }
+            }
+            @Override
+            public void onFailure(Call<Account> call, Throwable t) {
+                Toast.makeText(mContext,"Incorrect Email or Password", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return null;
+    }
+
 }

@@ -15,10 +15,11 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.util.*;
 
+import ZalfyPutraRezkyJSleepRJ.jsleep_android.model.Account;
 import ZalfyPutraRezkyJSleepRJ.jsleep_android.model.Room;
 
 public class MainActivity extends AppCompatActivity {
-
+    protected static Account accountLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

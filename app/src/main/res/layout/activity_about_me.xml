@@ -25,7 +25,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -42,7 +42,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/email"
+        android:id="@+id/emailText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -59,7 +59,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/accountBalance"
+        android:id="@+id/balance"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -72,7 +72,6 @@
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="0.0"
         android:textColor="#737373"
         android:textColorHint="#AAAAAA"
         android:textSize="18sp"
@@ -85,7 +84,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/balance"
+        android:id="@+id/balanceText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -102,7 +101,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/emailAddress"
+        android:id="@+id/email"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -115,7 +114,6 @@
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="zalfy@ui.ac.id"
         android:textColor="#737373"
         android:textColorHint="#AAAAAA"
         android:textSize="18sp"
@@ -128,7 +126,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/personName"
+        android:id="@+id/name"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -141,7 +139,6 @@
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="Zalfy"
         android:textColor="#737373"
         android:textColorHint="#AAAAAA"
         android:textSize="18sp"

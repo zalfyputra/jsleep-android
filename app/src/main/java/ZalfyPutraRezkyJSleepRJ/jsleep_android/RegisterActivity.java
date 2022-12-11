@@ -1,10 +1,13 @@
 package ZalfyPutraRezkyJSleepRJ.jsleep_android;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +18,10 @@ import ZalfyPutraRezkyJSleepRJ.jsleep_android.request.UtilsApi;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+/**
+ * Activity to register new accounts
+ * @author Zalfy Putra Rezky
+ */
 public class RegisterActivity extends AppCompatActivity {
     BaseApiService mApiService;
     EditText name, email, password;
@@ -25,14 +31,22 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
-        mApiService = UtilsApi.getAPIService();
-        mContext = this;
-        registerButton = findViewById(R.id.registerButton);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setElevation(0);
+        actionBar.setHomeAsUpIndicator(R.drawable.backbutton);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null){
+            setTitle("");
+        }
+
+        mApiService = UtilsApi.getApiService();
+        mContext = this;
+        name = findViewById(R.id.nameBox);
+        email = findViewById(R.id.emailBox);
+        password = findViewById(R.id.passwordBox);
         // Register
+        registerButton = findViewById(R.id.registerButton);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,18 +55,13 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
     protected Account requestRegister() {
-        name = findViewById(R.id.usernameBox);
-        email = findViewById(R.id.emailBox);
-        password = findViewById(R.id.passwordBox);
-        mApiService.register(name.getText().toString(), email.getText().toString(), password.getText().toString()).enqueue(new Callback<Account>() {
+        mApiService.registerAccount(name.getText().toString(), email.getText().toString(), password.getText().toString()).enqueue(new Callback<Account>() {
             @Override
             public void onResponse(Call<Account> call, Response<Account> response) {
                 if (response.isSuccessful()) {
-                    Account register;
-                    register = response.body();
+                    Toast.makeText(mContext,"Account registered successfully", Toast.LENGTH_LONG).show();
                     Intent move = new Intent(RegisterActivity.this, LoginActivity.class);
                     startActivity(move);
-                    Toast.makeText(mContext,"Account registered successfully", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -61,5 +70,16 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
         return null;
+    }
+
+    // Add a back button to the action bar
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

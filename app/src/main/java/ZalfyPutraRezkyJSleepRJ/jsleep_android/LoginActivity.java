@@ -6,20 +6,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
-
 import ZalfyPutraRezkyJSleepRJ.jsleep_android.model.Account;
 import ZalfyPutraRezkyJSleepRJ.jsleep_android.request.BaseApiService;
 import ZalfyPutraRezkyJSleepRJ.jsleep_android.request.UtilsApi;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-
+/**
+ * Activity to login to the app using registered accounts
+ * Cancel order and make payment
+ * @author Zalfy Putra Rezky
+ */
 public class LoginActivity extends AppCompatActivity {
     BaseApiService mApiService;
     EditText email, password;
     Button loginButton, registerButton;
     Context mContext;
+    public static int filterUsed = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +30,9 @@ public class LoginActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-        mApiService = UtilsApi.getAPIService();
+
+        // Declare variable
+        mApiService = UtilsApi.getApiService();
         mContext = this;
         email = findViewById(R.id.emailBox);
         password = findViewById(R.id.passwordBox);
@@ -52,57 +57,31 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    /**
-    protected Account requestAccount() {
-        mApiService.getAccount(0).enqueue(new Callback<Account>() {
-            @Override
-            public void onResponse(Call<Account> call, Response<Account> response) {
-                if (response.isSuccessful()) {
-                    Account account;
-                    account = response.body();
-                    System.out.println("Login Successful");
-                    System.out.println(account.toString());
-                }
-            }
-            @Override
-            public void onFailure(Call<Account> call, Throwable t) {
-                System.out.println("Login Failed");
-                System.out.println(t.toString());
-                Toast.makeText(mContext,"No Account id = 0", Toast.LENGTH_SHORT).show();
-            }
-        });
-        return null;
-    }
-     */
-
     protected Account requestLogin() {
-        email = findViewById(R.id.emailBox);
-        password = findViewById(R.id.passwordBox);
-        mApiService.login(email.getText().toString(), password.getText().toString()).enqueue(new Callback<Account>() {
+        mApiService.getAccount(email.getText().toString(), password.getText().toString()).enqueue(new Callback<Account>() {
             @Override
             public void onResponse(Call<Account> call, Response<Account> response) {
                 if (response.isSuccessful()) {
                     Account account;
                     account = response.body();
                     System.out.println(account.toString());
-                    Intent move = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(move);
-                    Toast.makeText(mContext,"Login Successful", Toast.LENGTH_SHORT).show();
                     MainActivity.emailLog = email.getText().toString();
                     MainActivity.passwordLog = password.getText().toString();
                     MainActivity.nameLog = account.name;
                     MainActivity.balanceLog = String.valueOf(account.balance);
                     MainActivity.renter = account.renter;
                     MainActivity.idLog = account.id;
+                    Toast.makeText(mContext,"Login Successful", Toast.LENGTH_LONG).show();
+                    Intent move = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(move);
                 }
             }
             @Override
             public void onFailure(Call<Account> call, Throwable t) {
-                Toast.makeText(mContext,"Incorrect Email or Password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,"Incorrect Email or Password", Toast.LENGTH_LONG).show();
                 System.out.println("Incorrect Email or Password!");
             }
         });
         return null;
     }
-
 }

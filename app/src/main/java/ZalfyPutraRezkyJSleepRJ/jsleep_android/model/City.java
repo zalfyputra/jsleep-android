@@ -1,13 +1,8 @@
 package ZalfyPutraRezkyJSleepRJ.jsleep_android.model;
-
+/**
+ * Enumeration for city
+ * @author Zalfy Putra Rezky
+ */
 public enum City {
-    BALI,
-    BANDUNG,
-    SURABAYA,
-    JAKARTA,
-    SEMARANG,
-    MEDAN,
-    DEPOK,
-    BEKASI,
-    LAMPUNG
+    SURABAYA, DEPOK, LAMPUNG, JAKARTA, BANDUNG, SEMARANG, MEDAN, BEKASI, BALI
 }

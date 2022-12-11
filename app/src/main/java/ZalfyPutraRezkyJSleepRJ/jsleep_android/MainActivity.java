@@ -1,136 +1,310 @@
 package ZalfyPutraRezkyJSleepRJ.jsleep_android;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ArrayAdapter;
-import android.app.*;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.InvalidObjectException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import android.widget.*;
+import java.util.*;
+import ZalfyPutraRezkyJSleepRJ.jsleep_android.model.Account;
+import ZalfyPutraRezkyJSleepRJ.jsleep_android.model.Payment;
 import ZalfyPutraRezkyJSleepRJ.jsleep_android.model.Renter;
 import ZalfyPutraRezkyJSleepRJ.jsleep_android.model.Room;
 import ZalfyPutraRezkyJSleepRJ.jsleep_android.request.BaseApiService;
 import ZalfyPutraRezkyJSleepRJ.jsleep_android.request.UtilsApi;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
+import retrofit2.*;
+/**
+ * Main page of the app that contains the list of rooms
+ * Can go to room details, account details, and create rooms
+ * @author Zalfy Putra Rezky
+ */
 public class MainActivity extends AppCompatActivity {
-    //Declare variable
     BaseApiService mApiService;
     Context mContext;
     String name;
+    EditText page;
+    Button next, prev, go, filter;
+    TextView welcomeText, noOnGoing;
     public static String emailLog;
     public static String passwordLog;
     public static String balanceLog;
     public static String nameLog;
     public static Renter renter;
     public static int idLog;
-    ArrayList<Room> roomList = new ArrayList<Room>();
-    ArrayList<String> nameList = new ArrayList<>();
-    int currentPage = 0;
-    int pageSize = 11;
+    public static int roomSelected;
+    public static int listSelected;
+    public static int paymentSelected;
+    private ListView lv, onGoinglv;
+    private SearchView searchBar;
+    private String searchedRoom;
+    public static int isOnGoing; //Nandain kalo yang dipilih list onGoing
+    public static ArrayList<Room> roomList = new ArrayList<Room>();
+    public static ArrayList<Room> roomSearchList = new ArrayList<>();
+    public static ArrayList<Account> accountList = new ArrayList<>();
+    public static ArrayList<String> nameList = new ArrayList<>();
+    public static ArrayList<String> onGoingList = new ArrayList<>();
+    public static ArrayList<Payment> paymentListonGoing = new ArrayList<Payment>();
+    public static int currPage = 0;
+    public static int pageSize = 11;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        /**
-        Button nextButton = findViewById(R.id.nextButton);
-        EditText page = findViewById(R.id.findPage);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mApiService = UtilsApi.getAPIService();
-        mContext = this;
-        getAllRoom(currentPage, pageSize);
-        ArrayAdapter<String> arrA = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, nameList);
-        ListView lv = findViewById(R.id.mainList);
-        lv.setAdapter(arrA);
-        System.out.println("Current page" + currentPage);
-        **/
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        // Hide shadow and set back button
         ActionBar actionBar = getSupportActionBar();
         actionBar.setElevation(0);
-        //Read JSON to ListView
-        Gson gson = new Gson();
-        try {
-            InputStream filepath = getAssets().open("randomRoomList.json");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(filepath));
-            Room[] accountList = new Gson().fromJson(reader, Room[].class);
-            Collections.addAll(roomList, accountList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ArrayList<String> names = new ArrayList<String>();
-        for(Room room : roomList){
-            names.add(room.name);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
-        ListView listView = findViewById(R.id.mainList);
-        listView.setAdapter(adapter);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.backbutton);
+
+        // Declare variable
+        mApiService = UtilsApi.getApiService();
+        mContext = this;
+        nameList = new ArrayList<>();
+        lv = findViewById(R.id.mainList);
+        onGoinglv = findViewById(R.id.onGoingList);
+        prev = findViewById(R.id.prevButton);
+        next = findViewById(R.id.nextButton);
+        go = findViewById(R.id.goButton);
+        page = findViewById(R.id.findPage);
+        filter = findViewById(R.id.filterButton);
+
+        // Title
+        welcomeText = findViewById(R.id.welcomeText);
+        welcomeText.setText("Welcome, " + nameLog);
+
+        // Filter and Search
+        if(LoginActivity.filterUsed == 0)
+            getAllRoom(currPage, pageSize);
+        displayList(currPage);
+        getOnGoingPayment();
+        searchBar = findViewById(R.id.searchBar);
+
+        // Prev Button
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currPage -= 1;
+                displayList(currPage);
+            }
+        });
+
+        // Next Button
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currPage += 1;
+                displayList(currPage);
+            }
+        });
+
+        // Go Button
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nameList = new ArrayList<>();
+                getAllRoom(currPage, pageSize);
+            }
+        });
+
+        // Filter Button
+        filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, FilterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mApiService.getAllACcount().enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                if(response.isSuccessful()) {
+                    if (accountList != null)
+                        accountList.clear();
+                    accountList.addAll(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable t) {
+                Toast.makeText(mContext, "No Account found", Toast.LENGTH_SHORT);
+            }
+        });
+
+        // Main List
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                isOnGoing = 0;
+                listSelected = i;
+                System.out.println("Selected: " + nameList.get(listSelected));
+                for(Room j : roomList){
+                    if(j.name.equals(nameList.get(listSelected))){
+                        roomSelected = j.id;
+                        System.out.println("Selected id: " + roomSelected);
+                    }
+                }
+                Intent toDetailRoom = new Intent(MainActivity.this, DetailRoomActivity.class);
+                startActivity(toDetailRoom);
+                Toast.makeText(mContext, "Room : "+ i, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        // On Going List
+        onGoinglv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            int onGoingRoomSelected;
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int onGoingSelected, long l) {
+                isOnGoing = 1;
+                for(Room i : roomList){
+                    if(i.name.equals(onGoingList.get(onGoingSelected)))
+                        onGoingRoomSelected = i.id;
+                }
+                for(Payment i : paymentListonGoing){
+                    if(i.getRoomId() == onGoingRoomSelected && i.buyerId == idLog)
+                        paymentSelected = i.id;
+                    startActivity(new Intent(MainActivity.this, ConfirmRoomOrderActivity.class));
+                }
+            }
+        });
+
+        // Search Bar
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                searchedRoom = s;
+                System.out.println(s);
+                mApiService.searchRoom(searchedRoom, currPage, pageSize).enqueue(new Callback<List<Room>>() {
+                    @Override
+                    public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                        if(response.isSuccessful()){
+                            System.out.println("masuk tidak");
+                            if(roomSearchList != null)
+                                roomSearchList.clear();
+                            roomSearchList.addAll(response.body());
+                            nameList.clear();
+                            for(Room i : roomSearchList){
+                                nameList.add(i.name);
+                            }
+                            System.out.println("Name list baru: " + nameList);
+                            Collections.sort(nameList);
+                        }
+                        displayList(currPage);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Room>> call, Throwable t) {
+
+                    }
+                });
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.topmenu, menu);
-        return true;
+        getMenuInflater().inflate(R.menu.topmenu, menu);
+        return(super.onCreateOptionsMenu(menu));
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.search_button:
-                return super.onOptionsItemSelected(item);
-            case R.id.user_button:
-                startActivity(new Intent(MainActivity.this, AboutMeActivity.class));
+            case android.R.id.home:
+                Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(i);
                 return true;
-            case R.id.add_button:
-                startActivity(new Intent(MainActivity.this, CreateRoomActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        if (item.getItemId() == R.id.search_button) {
+            Toast.makeText(this, "Nothing to see here :)", Toast.LENGTH_SHORT).show();
+        } else if (item.getItemId() == R.id.person_button) {
+            Intent aboutMeIntent = new Intent(MainActivity.this, AboutMeActivity.class);
+            startActivity(aboutMeIntent);
+            return true;
+        } else if (item.getItemId() == R.id.add_button) {
+            Intent addRoomIntent = new Intent(MainActivity.this, CreateRoomActivity.class);
+            startActivity(addRoomIntent);
+            return true;
+        } else if (item.getItemId() == R.id.notify_button) {
+            Intent addRoomIntent = new Intent(MainActivity.this, AcceptOrderActivity.class);
+            startActivity(addRoomIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void displayOnGoing(){
+        if(onGoingList.isEmpty()){
+            noOnGoing = findViewById(R.id.noOrderFound);
+            onGoinglv.setVisibility(View.INVISIBLE);
+            noOnGoing.setVisibility(View.VISIBLE);
+        }else{
+            ArrayAdapter<String> onGoingRoom = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, onGoingList);
+            onGoinglv.setAdapter(onGoingRoom);
+        }
+
+    }
+    public void displayList(int currpage){
+        ArrayAdapter<String> arrA = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, nameList);
+        lv.setAdapter(arrA);
+    }
+
+    protected List<Payment> getOnGoingPayment(){
+        mApiService.getOnGoingPayment(MainActivity.idLog).enqueue(new Callback<List<Payment>>() {
+            @Override
+            public void onResponse(Call<List<Payment>> call, Response<List<Payment>> responsePayment) {
+                System.out.println("Respon: " + responsePayment);
+                if(paymentListonGoing != null)
+                    paymentListonGoing.clear();
+                System.out.println("MEMEK");
+                if(responsePayment.body().isEmpty() == false){
+                    System.out.println("kok masuk?");
+                    paymentListonGoing.addAll(responsePayment.body());
+                    System.out.println("payment di sini: " + paymentListonGoing.get(0).buyerId) ;
+                    for(int i = 0; i < paymentListonGoing.size(); i++) {
+                        System.out.println("masuk ke " + i);
+                        for (int j = 0; j < roomList.size(); j++) {
+                            if (roomList.get(j).id == paymentListonGoing.get(i).getRoomId())
+                                onGoingList.add(roomList.get(j).name + " (" + paymentListonGoing.get(i).status + ")");
+                        }
+                    }
+                }
+                displayOnGoing();
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Payment>> call, Throwable t) {
+
+            }
+        });
+        return null;
     }
 
     protected List<Room> getAllRoom(int page, int pagesize){
         mApiService.getAllRoom(page, pagesize).enqueue(new Callback<List<Room>>() {
             @Override
-            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+            public void onResponse(@NonNull Call<List<Room>> call, @NonNull Response<List<Room>> response) {
                 if(response.isSuccessful()){
                     if(roomList != null)
                         roomList.clear();
                     roomList.addAll(response.body());
-                    for(Room i : roomList){
+                    for(Room i : roomList)
                         nameList.add(i.name);
-                    }
                     Collections.sort(nameList);
-
-                    System.out.println(roomList);
                     List<String> nameList = new ArrayList<>();
                     for (Room i : roomList){
                         nameList.add(i.name);
@@ -139,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<List<Room>> call, Throwable t) {
-                Toast.makeText(mContext, "Room not found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Room not found", Toast.LENGTH_LONG).show();
             }
         });
         return null;

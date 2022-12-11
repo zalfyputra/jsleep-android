@@ -3,6 +3,8 @@
     <style name="Theme.Jsleepandroid" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="titleTextColor">#008037</item>
+        <item name="android:editTextColor">#000</item>
+        <item name="android:textColor">#000</item>
         <item name="colorPrimary">#F7FFFF</item>
         <item name="colorPrimaryVariant">#F7FFFF</item>
         <item name="colorOnPrimary">#F7FFFF</item>

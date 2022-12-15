@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mApiService.getAllACcount().enqueue(new Callback<List<Account>>() {
+        mApiService.getAllAccount().enqueue(new Callback<List<Account>>() {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
                 if(response.isSuccessful()) {

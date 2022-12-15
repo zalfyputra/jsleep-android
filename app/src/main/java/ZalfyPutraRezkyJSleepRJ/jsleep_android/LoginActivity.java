@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     protected Account requestLogin() {
-        mApiService.getAccount(email.getText().toString(), password.getText().toString()).enqueue(new Callback<Account>() {
+        mApiService.login(email.getText().toString(), password.getText().toString()).enqueue(new Callback<Account>() {
             @Override
             public void onResponse(Call<Account> call, Response<Account> response) {
                 if (response.isSuccessful()) {

@@ -54,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
     protected Account requestRegister() {
         mApiService.registerAccount(name.getText().toString(), email.getText().toString(), password.getText().toString()).enqueue(new Callback<Account>() {
             @Override

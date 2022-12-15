@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import ZalfyPutraRezkyJSleepRJ.jsleep_android.model.Account;
 import ZalfyPutraRezkyJSleepRJ.jsleep_android.model.Renter;
 import ZalfyPutraRezkyJSleepRJ.jsleep_android.request.BaseApiService;
 import ZalfyPutraRezkyJSleepRJ.jsleep_android.request.UtilsApi;
@@ -103,7 +105,18 @@ public class AboutMeActivity extends AppCompatActivity {
         } else {
             displayRenter();
         }
+
+        // Top Up Balance
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int id = MainActivity.idLog;
+                double balance = Double.parseDouble(balanceBox.getText().toString());
+                requestTopUp(id,balance);
+            }
+        });
     }
+
     protected Renter registerRenter(){
         mApiService.registerRenter(MainActivity.idLog, name.getText().toString(), address.getText().toString(), phone.getText().toString()).enqueue(new Callback<Renter>()  {
             @Override
@@ -138,6 +151,24 @@ public class AboutMeActivity extends AppCompatActivity {
         nameRenter.setText(MainActivity.renter.name);
         addressRenter.setText(MainActivity.renter.address);
         phoneRenter.setText(MainActivity.renter.phoneNumber);
+    }
+
+    protected Renter requestTopUp(int id, double balance){
+        mApiService.topUpAccount(id, balance).enqueue(new Callback<Boolean>(){
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                MainActivity.balanceLog += balance;
+                Toast.makeText(mContext, "Top Up Successful!", Toast.LENGTH_LONG).show();
+                Intent move = new Intent(AboutMeActivity.this, LoginActivity.class);
+                startActivity(move);
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Toast.makeText(mContext, "Top Up Failed!", Toast.LENGTH_LONG).show();
+            }
+        });
+        return null;
     }
 
     // Add a back button to the action bar

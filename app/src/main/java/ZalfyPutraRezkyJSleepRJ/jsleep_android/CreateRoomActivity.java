@@ -175,6 +175,7 @@ public class CreateRoomActivity extends AppCompatActivity implements View.OnClic
                 if(response.isSuccessful()){
                     List<Room> room;
                     room = response.body();
+                    Toast.makeText(mContext, "Room created successfully", Toast.LENGTH_SHORT).show();
                     Intent move = new Intent(CreateRoomActivity.this, MainActivity.class);
                     startActivity(move);
                 }
